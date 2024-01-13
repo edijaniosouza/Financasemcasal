@@ -12,3 +12,4 @@ val Purple40 = Color(0xFF9900CC)
 
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
+val Grey = Color(0xFF727272)
