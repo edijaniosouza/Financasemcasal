@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 import com.example.financasemcasal.database.converter.BigDecimalConverter
 import com.example.financasemcasal.database.converter.DataConverter
 import com.example.financasemcasal.database.dao.TransactionDao
+import com.example.financasemcasal.database.dao.TransactionWithUserAccountsDao
 import com.example.financasemcasal.database.dao.UserAccountDao
 import com.example.financasemcasal.model.Transaction
 import com.example.financasemcasal.model.UserAccount
@@ -17,4 +18,5 @@ val DATABASE_NAME = "financas_conjunto_database"
 abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun userAccountDao(): UserAccountDao
+    abstract fun TransactionWithUserAccountsDao(): TransactionWithUserAccountsDao
 }

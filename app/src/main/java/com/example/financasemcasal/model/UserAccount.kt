@@ -18,8 +18,6 @@ data class UserAccount (
     val userPassword: String,
     @ColumnInfo("account_balance")
     val accountBalance: Long = 0L,
-    val revenueTotal: Long = 0L,
-    val expenseTotal: Long = 0L,
     @ColumnInfo("created_at")
     val createdAt: Date = Date(),
     @ColumnInfo("updated_at")

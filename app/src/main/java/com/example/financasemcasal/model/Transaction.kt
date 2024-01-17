@@ -13,12 +13,13 @@ data class Transaction(
     val transactionID: Long = 0,
     val description: String,
     val value: BigDecimal,
-    val icon: Int? = null,
-    @ColumnInfo("is_expense")
-    val isExpense: Boolean,
+    @ColumnInfo("is_paid")
+    val isPaid: Boolean = false,
     val category: String = "",
     @ColumnInfo("is_shared")
     val isShared: Boolean = false,
+    @ColumnInfo("is_expense")
+    val isExpense: Boolean,
     @ColumnInfo("created_at")
     val createdAt: Date = Date(),
     @ColumnInfo("updated_at")

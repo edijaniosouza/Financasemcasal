@@ -30,6 +30,9 @@ val appModules = module {
         get<AppDatabase>().transactionDao()
     }
 
+    single{
+        get<AppDatabase>().TransactionWithUserAccountsDao()
+    }
 
     single {
         TransactionRepository(get())
