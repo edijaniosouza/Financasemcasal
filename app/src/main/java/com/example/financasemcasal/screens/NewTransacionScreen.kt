@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ButtonDefaults
@@ -32,12 +33,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.financasemcasal.model.Transaction
+import com.example.financasemcasal.uiState.NewTransactionScreenState
+import com.example.financasemcasal.viewmodel.TransactionViewModel
+import org.koin.androidx.compose.koinViewModel
+import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,19 +81,26 @@ fun NewTransacionScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
         )
         {
+            val newTransactionScreenState = remember {
+                NewTransactionScreenState()
+            }
 
-            var state by remember { mutableStateOf(0) }
-            val titles = listOf("Saida", "Entrada")
+            val description = newTransactionScreenState.description
+            val value = newTransactionScreenState.value
+            val category = newTransactionScreenState.category
+            val isShared = newTransactionScreenState.isShared
+            val tabState = newTransactionScreenState.tabState
+            val tabNames = newTransactionScreenState.tabNames
 
             TabRow(
-                selectedTabIndex = state,
+                selectedTabIndex = tabState,
                 containerColor = transactionColor,
                 contentColor = Color.White
             ) {
-                titles.forEachIndexed { index, title ->
+                tabNames.forEachIndexed { index, title ->
                     Tab(
-                        selected = state == index,
-                        onClick = { state = index },
+                        selected = tabState == index,
+                        onClick = { newTransactionScreenState.tabState = index },
                         text = {
                             Text(
                                 text = title,
@@ -97,42 +111,40 @@ fun NewTransacionScreen(navController: NavController) {
                     )
                 }
             }
-
-            when (state) {
+            var isExpense = false
+            when (tabState) {
                 0 -> {
                     transactionColor = Color.Red
+                    isExpense = true
                 }
 
                 1 -> {
                     transactionColor = Color.Green
+                    isExpense = false
                 }
             }
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                var title by remember { mutableStateOf("") }
+
                 OutlinedTextField(
-                    value = title,
-                    onValueChange = { newTitle ->
-                        title = newTitle
-                    }, label = { Text("Descrição") }, singleLine = true
+                    value = description,
+                    onValueChange = newTransactionScreenState.onDescriptionChange,
+                    label = { Text("Descrição") }, singleLine = true
                 )
 
-                var valor by remember { mutableStateOf("") }
                 OutlinedTextField(
-                    value = valor,
-                    onValueChange = { newValor ->
-                        valor = newValor
-                    }, label = { Text("Valor") }, singleLine = true
+                    value = value,
+                    onValueChange = newTransactionScreenState.onValueChange,
+                    label = { Text("Valor") }, singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
 
-                var category by remember { mutableStateOf("") }
                 OutlinedTextField(
                     value = category,
-                    onValueChange = { newCategory ->
-                        category = newCategory
-                    }, label = { Text("Categoria") }, singleLine = true
+                    onValueChange = newTransactionScreenState.onCategoryChange,
+                    label = { Text("Categoria") }, singleLine = true
                 )
 
                 Row(
@@ -141,12 +153,14 @@ fun NewTransacionScreen(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Dividir", fontSize = 20.sp)
-                    var isShared by remember { mutableStateOf(false) }
-                    Checkbox(checked = isShared, onCheckedChange = { isShared = !isShared })
+                    Checkbox(
+                        checked = isShared,
+                        onCheckedChange = newTransactionScreenState.onCheckedChange
+                    )
                 }
             }
 
-
+            val viewModel = koinViewModel<TransactionViewModel>()
             ElevatedButton(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -156,6 +170,13 @@ fun NewTransacionScreen(navController: NavController) {
                     contentColor = colorScheme.onPrimary
                 ),
                 onClick = {
+                    viewModel.insertTransaction(
+                        Transaction(
+                            description = description,
+                            value = BigDecimal(value),
+                            isExpense = isExpense,
+                        )
+                    )
                     navController.popBackStack()
                 },
             ) {

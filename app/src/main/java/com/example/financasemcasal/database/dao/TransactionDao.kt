@@ -12,10 +12,10 @@ import com.example.financasemcasal.model.Transaction
 interface TransactionDao {
     @Insert
     suspend fun newTransaction(transaction: Transaction)
-    @Query("SELECT * FROM `transaction`")
-    suspend fun getAllTransactions() : LiveData<List<Transaction>>
+    @Query("SELECT * FROM transactions")
+    fun getAllTransactions() : LiveData<List<Transaction>>
     @Update
-    suspend fun editTransaction(transaction: Transaction) : LiveData<Transaction>
+    suspend fun editTransaction(transaction: Transaction)
     @Delete
     suspend fun deleteTransaction(transaction: Transaction)
 }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -47,7 +46,7 @@ fun TransacionCard(
                 contentDescription = "Category Icon",
             )
             Column {
-                Text(text = transacion.title, fontSize = 22.sp)
+                Text(text = transacion.description, fontSize = 22.sp)
                 Text(text = transacion.value.formatForBrazilianCurrency(), fontSize = 18.sp)
             }
 
@@ -69,7 +68,7 @@ fun TransacionCard(
 @Composable
 fun TransacionCardPreview() {
     TransacionCard(
-        transacion = Transaction("TESTE", BigDecimal("19.3"), isExpense = true),
+        transacion = Transaction(description = "TESTE", value = BigDecimal("19.3"), isExpense = true),
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
