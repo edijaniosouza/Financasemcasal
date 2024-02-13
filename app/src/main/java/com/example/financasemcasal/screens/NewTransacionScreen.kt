@@ -1,5 +1,6 @@
 package com.example.financasemcasal.screens
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,7 +45,7 @@ import com.example.financasemcasal.model.Transaction
 import com.example.financasemcasal.uiState.NewTransactionScreenState
 import com.example.financasemcasal.viewmodel.TransactionViewModel
 import org.koin.androidx.compose.koinViewModel
-import java.math.BigDecimal
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,16 +112,16 @@ fun NewTransacionScreen(navController: NavController) {
                     )
                 }
             }
-            var isExpense = false
+            var isExpense = 0
             when (tabState) {
                 0 -> {
                     transactionColor = Color.Red
-                    isExpense = true
+                    isExpense = 1
                 }
 
                 1 -> {
                     transactionColor = Color.Green
-                    isExpense = false
+                    isExpense = 0
                 }
             }
 
@@ -173,8 +174,8 @@ fun NewTransacionScreen(navController: NavController) {
                     viewModel.insertTransaction(
                         Transaction(
                             description = description,
-                            value = BigDecimal(value),
-                            isExpense = isExpense,
+                            value = value as Float,
+                            is_expense = isExpense,
                         )
                     )
                     navController.popBackStack()

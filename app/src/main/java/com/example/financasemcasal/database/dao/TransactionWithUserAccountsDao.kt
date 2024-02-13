@@ -1,5 +1,6 @@
 package com.example.financasemcasal.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -10,12 +11,11 @@ import androidx.room.Update
 import com.example.financasemcasal.model.TransactionUserCrossRef
 import com.example.financasemcasal.model.TransactionWithUserAccounts
 import com.example.financasemcasal.model.UserAccount
-
 @Dao
 interface TransactionWithUserAccountsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTransaction(transaction: Transaction)
+    suspend fun insertTransaction(transaction: com.example.financasemcasal.model.Transaction)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUserAccount(userAccount: UserAccount)
@@ -29,16 +29,16 @@ interface TransactionWithUserAccountsDao {
 
     @Transaction
     @Query("SELECT * FROM transactions")
-    suspend fun getAllTransactionsWithUserAccounts(): List<TransactionWithUserAccounts>
+    fun getAllTransactionsWithUserAccounts(): LiveData<List<TransactionWithUserAccounts>>
 
     @Update
-    suspend fun updateTransaction(transaction: Transaction)
+    suspend fun updateTransaction(transaction: com.example.financasemcasal.model.Transaction)
 
     @Update
     suspend fun updateUserAccount(userAccount: UserAccount)
 
     @Delete
-    suspend fun deleteTransaction(transaction: Transaction)
+    suspend fun deleteTransaction(transaction: com.example.financasemcasal.model.Transaction)
 
     @Delete
     suspend fun deleteUserAccount(userAccount: UserAccount)

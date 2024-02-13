@@ -1,5 +1,6 @@
 package com.example.financasemcasal.screens
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +16,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -38,17 +38,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.financasemcasal.formatForBrazilianCurrency
 import com.example.financasemcasal.helpers.NEW_TRANSACTION_SCREEN
 import com.example.financasemcasal.helpers.userTest
 import com.example.financasemcasal.screens.components.AccountBalanceCard
 import com.example.financasemcasal.screens.components.TransacionCard
 import com.example.financasemcasal.viewmodel.TransactionViewModel
+import io.github.jan.supabase.SupabaseClient
 import org.koin.androidx.compose.koinViewModel
 import java.math.BigDecimal
 
@@ -56,6 +55,7 @@ import java.math.BigDecimal
 @Composable
 fun HomeScreen(
     navController: NavController,
+    supabase: SupabaseClient,
 ) {
     val context = currentCompositionLocalContext
 
@@ -114,6 +114,13 @@ fun HomeScreen(
             val viewModel = koinViewModel<TransactionViewModel>()
             val transactions by viewModel.allTransactions.observeAsState()
 
+            // Teste
+            val usuario by viewModel.getUser("teste@teste.com", "1234").observeAsState()
+            Log.i("daoTeste", "HomeScreen: $usuario")
+
+            val abc by viewModel.allTransactionsUsers.observeAsState()
+            Log.i("daoTeste", "HomeScreen 2: $abc")
+
             if (transactions.isNullOrEmpty()) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -136,7 +143,15 @@ fun HomeScreen(
                                 text = { Text("Você deseja excluir essa transação ${transacion.description}?") },
                                 onDismissRequest = { showAlert = false },
                                 dismissButton = {
-                                    Button(onClick = { showAlert = false }) {
+                                    Button(onClick = {
+                                        usuario?.let { it1 ->
+                                            viewModel.createLink(
+                                                transacion.id,
+                                                it1.userAccountId
+                                            )
+                                        }
+                                        showAlert = false
+                                    }) {
                                         Text("Cancelar")
                                     }
                                 },
@@ -167,9 +182,9 @@ fun HomeScreen(
         }
     }
 }
-
-@Preview(showSystemUi = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen(rememberNavController())
-}
+//
+//@Preview(showSystemUi = true)
+//@Composable
+//fun HomeScreenPreview() {
+//    HomeScreen(rememberNavController())
+//}

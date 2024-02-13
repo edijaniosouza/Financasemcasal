@@ -68,7 +68,7 @@ fun AccountBalanceCard(
     }
 }
 
-@Preview()
+@Preview(showSystemUi = true)
 @Composable
 fun AccountBalanceCardPreview() {
     AccountBalanceCard(

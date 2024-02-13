@@ -21,8 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.financasemcasal.R
 import com.example.financasemcasal.model.Transaction
-import com.example.financasemcasal.formatForBrazilianCurrency
-import java.math.BigDecimal
 
 @Composable
 fun TransacionCard(
@@ -47,12 +45,14 @@ fun TransacionCard(
             )
             Column {
                 Text(text = transacion.description, fontSize = 22.sp)
-                Text(text = transacion.value.formatForBrazilianCurrency(), fontSize = 18.sp)
+                Text(text = "${transacion.value}", fontSize = 18.sp)
             }
 
             val isExpense =
-                if (transacion.isExpense) R.drawable.icon_arrow_down else R.drawable.icon_arrow_up
-            val isExpenseColor = if (transacion.isExpense) Color.Red else Color.Black
+                if (transacion.is_expense == 1) {
+                    R.drawable.icon_arrow_down
+                }  else R.drawable.icon_arrow_up
+            val isExpenseColor = if (transacion.is_expense == 1) Color.Red else Color.Black
 
             Icon(
                 painter = painterResource(id = isExpense),
@@ -68,7 +68,7 @@ fun TransacionCard(
 @Composable
 fun TransacionCardPreview() {
     TransacionCard(
-        transacion = Transaction(description = "TESTE", value = BigDecimal("19.3"), isExpense = true),
+        transacion = Transaction(description = "TESTE", value = 19.3f, is_expense = 1),
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()

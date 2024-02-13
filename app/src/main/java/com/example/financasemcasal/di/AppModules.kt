@@ -35,7 +35,7 @@ val appModules = module {
     }
 
     single {
-        TransactionRepository(get())
+        TransactionRepository(get(), get(), get())
     }
 
     viewModel {

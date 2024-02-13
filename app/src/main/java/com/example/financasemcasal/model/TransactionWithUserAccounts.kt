@@ -1,6 +1,7 @@
 package com.example.financasemcasal.model
 
 import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.Junction
 import androidx.room.Relation
 
